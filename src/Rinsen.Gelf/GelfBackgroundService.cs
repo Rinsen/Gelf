@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -14,16 +15,19 @@ namespace Rinsen.Gelf
         private readonly GelfPayloadSerializer _gelfPayloadSerializer;
         private readonly IGelfTransport _gelfTransport;
         private readonly GelfOptions _gelfOptions;
+        private readonly ILogger<GelfBackgroundService> _logger;
 
         public GelfBackgroundService(IGelfPayloadQueue gelfPayloadQueue,
             GelfPayloadSerializer gelfPayloadSerializer,
             IGelfTransport gelfTransport,
-            GelfOptions gelfOptions)
+            GelfOptions gelfOptions,
+            ILogger<GelfBackgroundService> logger)
         {
             _gelfPayloadQueue = gelfPayloadQueue;
             _gelfPayloadSerializer = gelfPayloadSerializer;
             _gelfTransport = gelfTransport;
             _gelfOptions = gelfOptions;
+            _logger = logger;
         }
 
         protected override async Task ExecuteAsync(CancellationToken stoppingToken)

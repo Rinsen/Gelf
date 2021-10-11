@@ -59,7 +59,7 @@ namespace Rinsen.Gelf
     /// <summary>
     /// Based on https://en.wikipedia.org/wiki/Syslog#Severity_level
     /// </summary>
-    internal enum LogLevel
+    public enum LogLevel
     {
         /// <summary>
         /// System is unusable	

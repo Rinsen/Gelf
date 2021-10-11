@@ -1,12 +1,26 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using System;
 
 namespace ConsoleSample
 {
     internal class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            CreateHostBuilder(args).Build().Run();
         }
+
+        public static IHostBuilder CreateHostBuilder(string[] args) =>
+            Host.CreateDefaultBuilder(args)
+                .ConfigureServices((hostContext, services) =>
+                {
+                    services.AddRinsenGelf(options =>
+                    {
+                        options.GelfServiceHostName = "";
+                        options.GelfServicePort = 12201;
+                    });
+                    services.AddHostedService<Worker>();
+                });
     }
 }
