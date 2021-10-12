@@ -8,20 +8,17 @@ namespace Rinsen.Gelf
     {
         readonly ConcurrentQueue<GelfPayload> _payloads = new ConcurrentQueue<GelfPayload>();
         private readonly GelfOptions _gelfOptions;
-        private readonly ILogger<GelfPayload> _logger;
 
-        public GelfPayloadQueue(GelfOptions gelfOptions,
-            ILogger<GelfPayload> logger)
+        public GelfPayloadQueue(GelfOptions gelfOptions)
         {
             _gelfOptions = gelfOptions;
-            _logger = logger;
         }
 
         public void AddLog(GelfPayload gelfPayload)
         {
             if (_payloads.Count > _gelfOptions.MaxQueueSize)
             {
-                _logger.LogDebug("Failed to enqueue gelf payload because max queue capacity is reached");
+                //_logger.LogDebug("Failed to enqueue gelf payload because max queue capacity is reached");
 
                 return;
             }
@@ -35,10 +32,10 @@ namespace Rinsen.Gelf
 
             if (_payloads.IsEmpty)
             {
-                if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Trace))
-                {
-                    _logger.LogTrace("No payloads to forward");
-                }
+                //if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Trace))
+                //{
+                //    _logger.LogTrace("No payloads to forward");
+                //}
 
                 return;
             }
@@ -58,10 +55,10 @@ namespace Rinsen.Gelf
                 }
             }
 
-            if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Trace))
-            {
-                _logger.LogTrace($"Dequeued {payloads.Count} payloads");
-            }
+            //if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Trace))
+            //{
+            //    _logger.LogTrace($"Dequeued {payloads.Count} payloads");
+            //}
         }
     }
 }

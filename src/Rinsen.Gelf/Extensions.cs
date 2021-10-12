@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using Rinsen.Gelf;
 using System;
 using System.Collections.Generic;
@@ -16,7 +17,6 @@ namespace Microsoft.Extensions.DependencyInjection
             options.Invoke(gelfOptions);
 
             services.AddSingleton(gelfOptions);
-            services.AddSingleton<IGelfPayloadQueue, GelfPayloadQueue>();
             services.AddTransient<IGelfPublisher, GelfPublisher>();
             services.AddHostedService<GelfBackgroundService>();
             services.AddTransient<GelfPayloadSerializer>();
@@ -29,8 +29,12 @@ namespace Microsoft.Extensions.DependencyInjection
                 default:
                     throw new NotSupportedException($"Transport {gelfOptions.GelfTransport} is not supported");
             }
-                        
+        }
 
+        public static void AddRinsenGelfLogger(this ILoggingBuilder loggingBuilder)
+        {
+            loggingBuilder.Services.AddSingleton<IGelfPayloadQueue, GelfPayloadQueue>();
+            loggingBuilder.Services.AddSingleton<ILoggerProvider, GelfLoggerProvider>();
         }
 
     }

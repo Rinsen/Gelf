@@ -19,13 +19,14 @@ namespace Rinsen.Gelf
             //_configuration = configuration;
         }
 
-        public void Send(string shortMessage, string? fullMessage, LogLevel logLevel, Dictionary<string, object> additionalFields)
+        public void Send(string shortMessage, string? fullMessage, GelfLogLevel logLevel, Dictionary<string, object> additionalFields)
         {
             var gelfPayload = new GelfPayload
             {
                 ShortMessage = shortMessage,
                 FullMessage = fullMessage,
-                AdditionalFields = additionalFields
+                AdditionalFields = additionalFields,
+                Host = "TestHost"
             };
 
             _gelfPayloadQueue.AddLog(gelfPayload);

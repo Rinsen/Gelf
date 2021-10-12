@@ -44,6 +44,8 @@ namespace Rinsen.Gelf
                     {
                         foreach (var gelfPayload in gelfPayloads)
                         {
+                            gelfPayload.Host = Environment.MachineName;
+
                             var serializedPayload = _gelfPayloadSerializer.Serialize(gelfPayload);
 
                             await _gelfTransport.Send(serializedPayload, stoppingToken);

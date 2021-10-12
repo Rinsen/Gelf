@@ -38,13 +38,13 @@ namespace Rinsen.Gelf
         /// Seconds since UNIX epoch with optional decimal places for milliseconds; SHOULD be set by client library. Will be set to the current timestamp (now) by the server if absent.
         /// </summary>
         [JsonPropertyName("timestamp")]
-        public long Timestamp { get; set; } = DateTimeOffset.Now.ToUnixTimeMilliseconds();
+        public long Timestamp { get; set; } = DateTimeOffset.Now.ToUnixTimeSeconds();
 
         /// <summary>
         /// Level equal to the standard syslog levels; optional, default is 1 (ALERT).
         /// </summary>
         [JsonPropertyName("level")]
-        public LogLevel Level { get; set; } = LogLevel.Alert;
+        public GelfLogLevel Level { get; set; } = GelfLogLevel.Alert;
 
         /// <summary>
         /// Every field you send and prefix with an underscore ( _) will be treated as an additional field. Allowed characters in field names are any word character (letter, number, underscore), dashes and dots. The verifying regular expression is: ^[\w\.\-]*$. Libraries SHOULD not allow to send id as additional field ( _id). Graylog server nodes omit this field automatically.
@@ -59,7 +59,7 @@ namespace Rinsen.Gelf
     /// <summary>
     /// Based on https://en.wikipedia.org/wiki/Syslog#Severity_level
     /// </summary>
-    public enum LogLevel
+    public enum GelfLogLevel
     {
         /// <summary>
         /// System is unusable	

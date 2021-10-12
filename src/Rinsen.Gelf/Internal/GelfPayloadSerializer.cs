@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Rinsen.Gelf
 {
@@ -7,7 +9,7 @@ namespace Rinsen.Gelf
 
         public string Serialize(GelfPayload gelfPayload)
         {
-            return System.Text.Json.JsonSerializer.Serialize(gelfPayload);
+            return JsonSerializer.Serialize(gelfPayload);
         }
 
 
