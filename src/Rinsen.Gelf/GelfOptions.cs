@@ -16,6 +16,7 @@ namespace Rinsen.Gelf
 
         public GelfTransport GelfTransport { get; set; }
 
+        public string ApplicationName { get; set; } = string.Empty;
     }
 
     public enum GelfTransport

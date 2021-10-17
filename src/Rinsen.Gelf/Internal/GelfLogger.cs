@@ -28,17 +28,18 @@ namespace Rinsen.Gelf
                 Level = GetGelfLogLevel(logLevel)
             };
 
-            if (state is IEnumerable<KeyValuePair<string, object>> keyValuePairs)
-            {
-                foreach (var keyValue in keyValuePairs)
-                {
-                    if (keyValue.Value is string)
-                    {
-                        gelfPayload.AdditionalFields.TryAdd("_state_" + keyValue.Key, keyValue.Value);
-                    }
-                }
-            }
+            gelfPayload.AdditionalFields.Add("_category", _categoryName);
 
+            AddEventInformation(eventId, gelfPayload);
+            AddStateInformation(state, gelfPayload);
+            AddScopeInformation(gelfPayload);
+            AddExceptionInformation(exception, gelfPayload);
+
+            _gelfPayloadQueue.AddLog(gelfPayload);
+        }
+
+        private static void AddScopeInformation(GelfPayload gelfPayload)
+        {
             var current = GelfLogScope.Current;
             while (current != null)
             {
@@ -52,10 +53,32 @@ namespace Rinsen.Gelf
 
                 current = current.Parent;
             }
+        }
 
-            AddExceptionInformation(exception, gelfPayload);
+        private static void AddStateInformation<TState>(TState state, GelfPayload gelfPayload)
+        {
+            if (state is IEnumerable<KeyValuePair<string, object>> keyValuePairs)
+            {
+                foreach (var keyValue in keyValuePairs)
+                {
+                    if (keyValue.Value is string)
+                    {
+                        gelfPayload.AdditionalFields.TryAdd("_state_" + keyValue.Key, keyValue.Value);
+                    }
+                }
+            }
+        }
 
-            _gelfPayloadQueue.AddLog(gelfPayload);
+        private static void AddEventInformation(EventId eventId, GelfPayload gelfPayload)
+        {
+            if (eventId.Id != 0)
+            {
+                gelfPayload.AdditionalFields.Add("_event_id", eventId.Id);
+                if (!string.IsNullOrEmpty(eventId.Name))
+                {
+                    gelfPayload.AdditionalFields.Add("_event_name", eventId.Name);
+                }
+            }
         }
 
         private void AddExceptionInformation(Exception? exception, GelfPayload gelfPayload, int count = 0)

@@ -42,6 +42,10 @@ namespace Rinsen.Gelf
                         foreach (var gelfPayload in gelfPayloads)
                         {
                             gelfPayload.Host = Environment.MachineName;
+                            if (!string.IsNullOrEmpty(_gelfOptions.ApplicationName))
+                            {
+                                gelfPayload.AdditionalFields.TryAdd("_application_name", _gelfOptions.ApplicationName);
+                            }
 
                             var serializedPayload = GelfPayloadSerializer.Serialize(gelfPayload);
 
