@@ -23,6 +23,7 @@ In ConfigureServices add the following code
       {
         options.GelfServiceHostName = "server.hostname";
         options.GelfServicePort = 12201;
+        options.ApplicationName = "MyApplicationName";
       });
     }
 
