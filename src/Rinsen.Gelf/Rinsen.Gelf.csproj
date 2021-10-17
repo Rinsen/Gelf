@@ -3,6 +3,15 @@
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
 	<Nullable>enable</Nullable>
+	<Version>0.0.1</Version>
+	<Title>Rinsen Gelf Logger</Title>
+	<Authors>Fredrik Rinsén</Authors>
+	<Description>Gelf logger for Microsoft.Extensions.Logging</Description>
+	<Copyright>© Fredrik Rinsén</Copyright>
+	<PackageLicenseExpression>MIT</PackageLicenseExpression>
+	<PackageTags>Rinsen GELF</PackageTags>
+	<RepositoryUrl>https://github.com/Rinsen/Gelf</RepositoryUrl>
+	<RepositoryType>git</RepositoryType>
   </PropertyGroup>
 
 	<ItemGroup>

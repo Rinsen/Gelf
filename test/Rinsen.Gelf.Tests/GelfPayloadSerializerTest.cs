@@ -24,7 +24,7 @@ namespace Rinsen.Gelf.Tests
                 }
             };
 
-            var serializedObject = serializer.Serialize(payload);
+            var serializedObject = GelfPayloadSerializer.Serialize(payload);
 
             Assert.Equal("{\"version\":\"1.1\",\"host\":\"host1\",\"short_message\":\"Short message\",\"full_message\":\"Full message\",\"timestamp\":1633819329526,\"level\":1,\"_item_name\":\"Name\",\"_item_age\":\"18\"}", serializedObject);
         }
@@ -41,7 +41,7 @@ namespace Rinsen.Gelf.Tests
                 Timestamp = 1633819329526
             };
 
-            var serializedObject = serializer.Serialize(payload);
+            var serializedObject = GelfPayloadSerializer.Serialize(payload);
 
             Assert.Equal("{\"version\":\"1.1\",\"host\":\"host1\",\"short_message\":\"Short message\",\"timestamp\":1633819329526,\"level\":1}", serializedObject);
         }

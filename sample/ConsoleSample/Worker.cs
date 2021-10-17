@@ -28,7 +28,7 @@ namespace ConsoleSample
             {
                 _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
 
-                _gelfPublisher.Send("Hello from worker", null, Rinsen.Gelf.GelfLogLevel.Error, null);
+                _gelfPublisher.Send($"Hello from worker at: {DateTimeOffset.Now}", null, GelfLogLevel.Error, null);
 
                 await Task.Delay(100, stoppingToken);
             }

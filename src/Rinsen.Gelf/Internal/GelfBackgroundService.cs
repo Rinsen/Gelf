@@ -12,19 +12,16 @@ namespace Rinsen.Gelf
     internal class GelfBackgroundService : BackgroundService
     {
         private readonly IGelfPayloadQueue _gelfPayloadQueue;
-        private readonly GelfPayloadSerializer _gelfPayloadSerializer;
         private readonly IGelfTransport _gelfTransport;
         private readonly GelfOptions _gelfOptions;
         private readonly ILogger<GelfBackgroundService> _logger;
 
         public GelfBackgroundService(IGelfPayloadQueue gelfPayloadQueue,
-            GelfPayloadSerializer gelfPayloadSerializer,
             IGelfTransport gelfTransport,
             GelfOptions gelfOptions,
             ILogger<GelfBackgroundService> logger)
         {
             _gelfPayloadQueue = gelfPayloadQueue;
-            _gelfPayloadSerializer = gelfPayloadSerializer;
             _gelfTransport = gelfTransport;
             _gelfOptions = gelfOptions;
             _logger = logger;
@@ -46,7 +43,7 @@ namespace Rinsen.Gelf
                         {
                             gelfPayload.Host = Environment.MachineName;
 
-                            var serializedPayload = _gelfPayloadSerializer.Serialize(gelfPayload);
+                            var serializedPayload = GelfPayloadSerializer.Serialize(gelfPayload);
 
                             await _gelfTransport.Send(serializedPayload, stoppingToken);
                         }
