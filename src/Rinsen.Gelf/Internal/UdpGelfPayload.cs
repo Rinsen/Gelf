@@ -60,7 +60,7 @@ namespace Rinsen.Gelf
 
             for (int i = 0; i < totalMessageChunksCount - 1; i++)
             {
-                chunkedSendBuffer[GelfChunkHeader.SequenseNumber] = Convert.ToByte(i + 1);
+                chunkedSendBuffer[GelfChunkHeader.SequenseNumber] = Convert.ToByte(i);
                 var offsetInSourceArray = i * GelfChunk.Size;
                 Array.Copy(sendbuf, offsetInSourceArray, chunkedSendBuffer, GelfChunkHeader.MessageStart, GelfChunk.Size);
                 
@@ -71,7 +71,7 @@ namespace Rinsen.Gelf
             var lastChunkSendBuffer = new byte[GelfChunkHeader.HeaderLength + remainingLength];
             Array.Copy(chunkedSendBuffer, lastChunkSendBuffer, GelfChunkHeader.HeaderLength);
             var lastOffsetInSourceArray = (totalMessageChunksCount - 1) * GelfChunk.Size;
-            lastChunkSendBuffer[GelfChunkHeader.SequenseNumber] = Convert.ToByte(totalMessageChunksCount);
+            lastChunkSendBuffer[GelfChunkHeader.SequenseNumber] = Convert.ToByte(totalMessageChunksCount - 1);
             Array.Copy(sendbuf, lastOffsetInSourceArray, lastChunkSendBuffer, GelfChunkHeader.MessageStart, remainingLength);
 
             await _udpClient.SendAsync(lastChunkSendBuffer, lastChunkSendBuffer.Length);
