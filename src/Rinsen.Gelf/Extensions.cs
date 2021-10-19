@@ -26,6 +26,12 @@ namespace Microsoft.Extensions.DependencyInjection
             }
         }
 
+        public static void AddRinsenGelfConsole(this IServiceCollection services, Action<GelfOptions> options)
+        {
+            services.AddSingleton<IGelfPayloadQueue, GelfPayloadQueue>();
+            services.AddRinsenGelf(options);        
+        }
+
         public static void AddRinsenGelfLogger(this ILoggingBuilder loggingBuilder)
         {
             loggingBuilder.Services.AddSingleton<IGelfPayloadQueue, GelfPayloadQueue>();

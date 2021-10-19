@@ -47,9 +47,7 @@ namespace Rinsen.Gelf
                                 gelfPayload.AdditionalFields.TryAdd("_application_name", _gelfOptions.ApplicationName);
                             }
 
-                            var serializedPayload = GelfPayloadSerializer.Serialize(gelfPayload);
-
-                            await _gelfTransport.Send(serializedPayload, stoppingToken);
+                            await _gelfTransport.Send(gelfPayload, stoppingToken);
                         }
                     }
                     else
