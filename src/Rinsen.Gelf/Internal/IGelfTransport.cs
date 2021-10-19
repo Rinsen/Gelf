@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Rinsen.Gelf
 {
-    public interface IGelfTransport
+    internal interface IGelfTransport
     {
-        Task Send(string gelfPayload, CancellationToken stoppingToken);
+        Task Send(GelfPayload gelfPayload, CancellationToken stoppingToken);
 
     }
 }

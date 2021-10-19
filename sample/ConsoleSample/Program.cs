@@ -15,11 +15,12 @@ namespace ConsoleSample
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddRinsenGelf(options =>
+                    services.AddRinsenGelfConsole(options =>
                     {
                         options.GelfServiceHostName = "ubuntuserver.rinsen.se";
                         options.GelfServicePort = 12201;
                     });
+
                     services.AddHostedService<Worker>();
                 });
     }

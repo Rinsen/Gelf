@@ -30,7 +30,16 @@ namespace ConsoleSample
 
                 _gelfPublisher.Send($"Hello from worker at: {DateTimeOffset.Now}", null, GelfLogLevel.Error, null);
 
-                await Task.Delay(100, stoppingToken);
+                var additionalFields = new Dictionary<string, object>();
+
+                for (int i = 0; i < 1000; i++)
+                {
+                    additionalFields.Add($"_param{i}", $"value{i}");
+                }
+
+                _gelfPublisher.Send($"Hello from worker with huge message at: {DateTimeOffset.Now}", null, GelfLogLevel.Error, additionalFields);
+
+                await Task.Delay(30000, stoppingToken);
             }
         }
     }
