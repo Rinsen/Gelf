@@ -29,7 +29,7 @@ namespace Rinsen.Gelf
 
             // UdpClient docs https://docs.microsoft.com/en-us/dotnet/api/system.net.sockets.udpclient?view=net-5.0
 
-            if (sendbuf.Length > 8192)
+            if (sendbuf.Length > GelfChunk.Size)
             {
                 await SendChunkedMessages(sendbuf);
             }
@@ -68,8 +68,10 @@ namespace Rinsen.Gelf
             }
 
             var remainingLength = sendbuf.Length - (totalMessageChunksCount - 1) * GelfChunk.Size;
+            
             var lastChunkSendBuffer = new byte[GelfChunkHeader.HeaderLength + remainingLength];
             Array.Copy(chunkedSendBuffer, lastChunkSendBuffer, GelfChunkHeader.HeaderLength);
+
             var lastOffsetInSourceArray = (totalMessageChunksCount - 1) * GelfChunk.Size;
             lastChunkSendBuffer[GelfChunkHeader.SequenseNumber] = Convert.ToByte(totalMessageChunksCount - 1);
             Array.Copy(sendbuf, lastOffsetInSourceArray, lastChunkSendBuffer, GelfChunkHeader.MessageStart, remainingLength);
@@ -137,7 +139,7 @@ namespace Rinsen.Gelf
 
         static class GelfChunk
         {
-            public const int Size = 3999;
+            public const int Size = 8192;
             public const int MaxCount = 128;
         }
     }
