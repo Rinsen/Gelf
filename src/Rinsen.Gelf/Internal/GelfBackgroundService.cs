@@ -62,6 +62,8 @@ namespace Rinsen.Gelf
                         Debug.WriteLine($"{e.Message}, {e.StackTrace}");
                     }
 
+                    _logger.LogError(e, "Failed to send GELF message");
+
                     await Task.Delay(20000, stoppingToken);
                 }
             }

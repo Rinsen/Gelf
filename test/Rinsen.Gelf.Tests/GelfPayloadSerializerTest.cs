@@ -9,8 +9,6 @@ namespace Rinsen.Gelf.Tests
         [Fact]
         public void TestSerialize()
         {
-            var serializer = new GelfPayloadSerializer();
-
             var payload = new GelfPayload
             {
                 Host = "host1",
@@ -32,8 +30,6 @@ namespace Rinsen.Gelf.Tests
         [Fact]
         public void TestSerialize_WithOptionalFieldsEmpty()
         {
-            var serializer = new GelfPayloadSerializer();
-
             var payload = new GelfPayload
             {
                 Host = "host1",

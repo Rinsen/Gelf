@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace Rinsen.Gelf
@@ -18,8 +17,6 @@ namespace Rinsen.Gelf
         {
             if (_payloads.Count > _gelfOptions.MaxQueueSize)
             {
-                //_logger.LogDebug("Failed to enqueue gelf payload because max queue capacity is reached");
-
                 return;
             }
 
@@ -32,11 +29,6 @@ namespace Rinsen.Gelf
 
             if (_payloads.IsEmpty)
             {
-                //if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Trace))
-                //{
-                //    _logger.LogTrace("No payloads to forward");
-                //}
-
                 return;
             }
 
@@ -54,11 +46,6 @@ namespace Rinsen.Gelf
                     break;
                 }
             }
-
-            //if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Trace))
-            //{
-            //    _logger.LogTrace($"Dequeued {payloads.Count} payloads");
-            //}
         }
     }
 }
