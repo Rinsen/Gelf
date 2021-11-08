@@ -20,7 +20,7 @@ namespace Rinsen.Gelf
             return logLevel != LogLevel.None;
         }
 
-        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
+        public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
         {
             var gelfPayload = new GelfPayload
             {
@@ -28,6 +28,7 @@ namespace Rinsen.Gelf
                 Level = GetGelfLogLevel(logLevel)
             };
 
+            gelfPayload.AdditionalFields.Add("_stringLevel", logLevel.ToString());
             gelfPayload.AdditionalFields.Add("_category", _categoryName);
 
             AddEventInformation(eventId, gelfPayload);

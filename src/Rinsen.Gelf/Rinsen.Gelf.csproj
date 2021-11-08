@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
 	<Nullable>enable</Nullable>
-	<Version>0.0.3</Version>
+	<Version>0.0.4</Version>
 	<Title>Rinsen Gelf Logger</Title>
 	<Authors>Fredrik Rinsén</Authors>
 	<Description>Gelf logger for Microsoft.Extensions.Logging</Description>
@@ -21,6 +21,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
+	  <PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.0" />
 	</ItemGroup>
 </Project>
