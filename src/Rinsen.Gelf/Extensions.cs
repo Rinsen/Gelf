@@ -11,6 +11,8 @@ namespace Microsoft.Extensions.DependencyInjection
             var gelfOptions = new GelfOptions();
             options.Invoke(gelfOptions);
 
+            ValidateGelfOptions(gelfOptions);
+
             services.AddSingleton(gelfOptions);
             services.AddTransient<IGelfPublisher, GelfPublisher>();
             services.AddHostedService<GelfBackgroundService>();
@@ -19,10 +21,23 @@ namespace Microsoft.Extensions.DependencyInjection
             switch (gelfOptions.GelfTransport)
             {
                 case GelfTransport.Udp:
-                    services.AddTransient<IGelfTransport, UdpGelfPayload>();
+                    services.AddTransient<IGelfTransport, UdpGelfPayloadTransport>();
                     break;
                 default:
                     throw new NotSupportedException($"Transport {gelfOptions.GelfTransport} is not supported");
+            }
+        }
+
+        private static void ValidateGelfOptions(GelfOptions gelfOptions)
+        {
+            if (string.IsNullOrEmpty(gelfOptions.GelfServiceHostName))
+            {
+                throw new Exception("GelfServiceHostName is null or empty");
+            }
+
+            if (string.IsNullOrEmpty(gelfOptions.ApplicationName))
+            {
+                throw new Exception("ApplicationName is null or empty");
             }
         }
 

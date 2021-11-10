@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Rinsen.Gelf
 {
-    internal class UdpGelfPayload : IGelfTransport, IDisposable
+    internal class UdpGelfPayloadTransport : IGelfTransport, IDisposable
     {
         private readonly GelfOptions _gelfOptions;
         private readonly UdpClient _udpClient;
         private bool _disposedValue;
 
-        public UdpGelfPayload(GelfOptions gelfOptions)
+        public UdpGelfPayloadTransport(GelfOptions gelfOptions)
         {
             _gelfOptions = gelfOptions;
             _udpClient = new UdpClient(_gelfOptions.GelfServiceHostName, _gelfOptions.GelfServicePort);
