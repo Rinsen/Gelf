@@ -10,7 +10,7 @@ namespace Rinsen.Gelf
 
         public TimeSpan TimeToSleepBetweenBatches { get; set; } = new TimeSpan(0, 0, 5);
 
-        public string GelfServiceHostName { get; set; } = string.Empty;
+        public string GelfServiceHostNameOrAddress { get; set; } = string.Empty;
 
         public int GelfServicePort { get; set; }
 

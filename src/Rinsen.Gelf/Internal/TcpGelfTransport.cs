@@ -20,7 +20,7 @@ namespace Rinsen.Gelf.Internal
         {
             _gelfOptions = gelfOptions;
             _tcpClient = new TcpClient();
-            if (IPAddress.TryParse(gelfOptions.GelfServiceHostName, out var address))
+            if (IPAddress.TryParse(gelfOptions.GelfServiceHostNameOrAddress, out var address))
             {
                 var ipEndpoint = new IPEndPoint(address, _gelfOptions.GelfServicePort);
              
@@ -28,7 +28,7 @@ namespace Rinsen.Gelf.Internal
             }
             else
             {
-                _tcpClient.Connect(gelfOptions.GelfServiceHostName, _gelfOptions.GelfServicePort);
+                _tcpClient.Connect(gelfOptions.GelfServiceHostNameOrAddress, _gelfOptions.GelfServicePort);
             }
         }
 
