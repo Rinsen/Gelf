@@ -17,8 +17,9 @@ namespace ConsoleSample
                 {
                     services.AddRinsenGelfConsole(options =>
                     {
-                        options.GelfServiceHostName = "";
-                        options.GelfServicePort = 12201;
+                        options.GelfServiceHostName = "127.0.0.1";
+                        options.GelfServicePort = 30761;
+                        options.GelfTransport = Rinsen.Gelf.GelfTransport.Udp;
                     });
 
                     services.AddHostedService<Worker>();

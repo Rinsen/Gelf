@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 using Rinsen.Gelf;
+using Rinsen.Gelf.Internal;
 using System;
 
 namespace Microsoft.Extensions.DependencyInjection
@@ -15,15 +16,9 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<IGelfPublisher, GelfPublisher>();
             services.AddHostedService<GelfBackgroundService>();
             services.AddTransient<GelfPayloadSerializer>();
-
-            switch (gelfOptions.GelfTransport)
-            {
-                case GelfTransport.Udp:
-                    services.AddTransient<IGelfTransport, UdpGelfPayload>();
-                    break;
-                default:
-                    throw new NotSupportedException($"Transport {gelfOptions.GelfTransport} is not supported");
-            }
+            services.AddTransient<UdpGelfTransport>();
+            services.AddTransient<TcpGelfTransport>();
+            
         }
 
         public static void AddRinsenGelfConsole(this IServiceCollection services, Action<GelfOptions> options)

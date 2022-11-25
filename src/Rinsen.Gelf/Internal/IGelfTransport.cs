@@ -9,6 +9,8 @@ namespace Rinsen.Gelf
 {
     internal interface IGelfTransport
     {
+        public GelfTransport TransportType { get; }
+
         Task Send(GelfPayload gelfPayload, CancellationToken stoppingToken);
 
     }

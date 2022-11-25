@@ -22,6 +22,7 @@ namespace Rinsen.Gelf
     public enum GelfTransport
     {
         Udp = 0,
-        
+        Tcp = 1,
+
     }
 }

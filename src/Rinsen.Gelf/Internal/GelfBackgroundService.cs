@@ -12,26 +12,28 @@ namespace Rinsen.Gelf
     internal class GelfBackgroundService : BackgroundService
     {
         private readonly IGelfPayloadQueue _gelfPayloadQueue;
-        private readonly IGelfTransport _gelfTransport;
+        private readonly IEnumerable<IGelfTransport> _gelfTransports;
         private readonly GelfOptions _gelfOptions;
         private readonly ILogger<GelfBackgroundService> _logger;
 
         public GelfBackgroundService(IGelfPayloadQueue gelfPayloadQueue,
-            IGelfTransport gelfTransport,
+            IEnumerable<IGelfTransport> gelfTransports,
             GelfOptions gelfOptions,
             ILogger<GelfBackgroundService> logger)
         {
             _gelfPayloadQueue = gelfPayloadQueue;
-            _gelfTransport = gelfTransport;
+            _gelfTransports = gelfTransports;
             _gelfOptions = gelfOptions;
             _logger = logger;
         }
 
-        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             var gelfPayloads = new List<GelfPayload>(200);
 
-            while (!stoppingToken.IsCancellationRequested)
+            var gelfTransport = _gelfTransports.Single(m => m.TransportType == _gelfOptions.GelfTransport);
+
+            while (!cancellationToken.IsCancellationRequested)
             {
                 try
                 {
@@ -47,12 +49,12 @@ namespace Rinsen.Gelf
                                 gelfPayload.AdditionalFields.TryAdd("_application_name", _gelfOptions.ApplicationName);
                             }
 
-                            await _gelfTransport.Send(gelfPayload, stoppingToken);
+                            await gelfTransport.Send(gelfPayload, cancellationToken);
                         }
                     }
                     else
                     {
-                        await Task.Delay(_gelfOptions.TimeToSleepBetweenBatches, stoppingToken);
+                        await Task.Delay(_gelfOptions.TimeToSleepBetweenBatches, cancellationToken);
                     }
                 }
                 catch (Exception e)
@@ -64,7 +66,7 @@ namespace Rinsen.Gelf
 
                     _logger.LogError(e, "Failed to send GELF message");
 
-                    await Task.Delay(20000, stoppingToken);
+                    await Task.Delay(20000, cancellationToken);
                 }
             }
         }
