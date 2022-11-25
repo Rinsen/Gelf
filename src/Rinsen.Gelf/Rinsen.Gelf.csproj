@@ -1,9 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0</TargetFramework>
+	<TargetFramework>net6.0</TargetFramework>
 	<Nullable>enable</Nullable>
-	<Version>0.0.4</Version>
+	<Version>0.0.6</Version>
 	<Title>Rinsen Gelf Logger</Title>
 	<Authors>Fredrik Rinsén</Authors>
 	<Description>Gelf logger for Microsoft.Extensions.Logging</Description>
