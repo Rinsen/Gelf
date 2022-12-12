@@ -15,11 +15,13 @@ namespace Rinsen.Gelf
             _gelfPayloadQueue = gelfPayloadQueue;
         }
 
+        /// <inheritdoc/>>
         public bool IsEnabled(LogLevel logLevel)
         {
             return logLevel != LogLevel.None;
         }
 
+        /// <inheritdoc/>>
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception? exception, Func<TState, Exception?, string> formatter)
         {
             var gelfPayload = new GelfPayload
@@ -118,7 +120,8 @@ namespace Rinsen.Gelf
             }
         }
 
-        public IDisposable BeginScope<TState>(TState state)
+        /// <inheritdoc/>>
+        public IDisposable? BeginScope<TState>(TState state) where TState : notnull
         {
             if (state == null)
             {

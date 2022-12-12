@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using System;
 
 namespace ConsoleSample
 {
@@ -15,14 +14,19 @@ namespace ConsoleSample
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddRinsenGelfConsole(options =>
+                    services.AddRinsenGelf(options =>
                     {
-                        options.GelfServiceHostNameOrAddress = "127.0.0.1";
-                        options.GelfServicePort = 30761;
+                        options.GelfServiceHostNameOrAddress = "graylog.rinsen.se";
+                        options.GelfServicePort = 12202;
                         options.GelfTransport = Rinsen.Gelf.GelfTransport.Udp;
                     });
 
                     services.AddHostedService<Worker>();
+
+                    services.AddLogging(options =>
+                    {
+                        options.AddRinsenGelfLogger();
+                    });
                 });
     }
 }

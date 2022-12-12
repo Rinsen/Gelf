@@ -12,6 +12,8 @@ namespace Rinsen.Gelf
         private readonly GelfOptions _gelfOptions;
         private readonly UdpClient _udpClient;
         private bool _disposedValue;
+        private bool _initialized = false;
+        private readonly object _lock = new();
 
         public GelfTransport TransportType => GelfTransport.Udp;
 
@@ -19,20 +21,12 @@ namespace Rinsen.Gelf
         {
             _gelfOptions = gelfOptions;
             _udpClient = new UdpClient(_gelfOptions.GelfServicePort);
-            if (IPAddress.TryParse(gelfOptions.GelfServiceHostNameOrAddress, out var address))
-            {
-                var ipEndpoint = new IPEndPoint(address, _gelfOptions.GelfServicePort);
-
-                _udpClient.Connect(ipEndpoint);
-            }
-            else
-            {
-                _udpClient.Connect(gelfOptions.GelfServiceHostNameOrAddress, _gelfOptions.GelfServicePort);
-            }
         }
 
         public async Task Send(GelfPayload gelfPayload, CancellationToken stoppingToken)
         {
+            Init(_gelfOptions);
+
             var serializedPayload = GelfPayloadSerializer.Serialize(gelfPayload);
             
             byte[] sendbuf = Encoding.UTF8.GetBytes(serializedPayload);
@@ -49,6 +43,34 @@ namespace Rinsen.Gelf
             else
             {
                 await _udpClient.SendAsync(sendbuf, sendbuf.Length);
+            }
+        }
+
+        private void Init(GelfOptions gelfOptions)
+        {
+            if (_initialized)
+            {
+                return;
+            }
+
+            lock (_lock)
+            {
+                if (_initialized)
+                {
+                    return;
+                }
+
+                if (IPAddress.TryParse(gelfOptions.GelfServiceHostNameOrAddress, out var address))
+                {
+                    var ipEndpoint = new IPEndPoint(address, _gelfOptions.GelfServicePort);
+
+                    _udpClient.Connect(ipEndpoint);
+                }
+                else
+                {
+                    _udpClient.Connect(gelfOptions.GelfServiceHostNameOrAddress, _gelfOptions.GelfServicePort);
+                }
+                _initialized = true;
             }
         }
 
