@@ -10,6 +10,8 @@ namespace Rinsen.Gelf.Tests.Internal
 {
     public class UdpGelfTransportTest
     {
+
+        // Standard description https://go2docs.graylog.org/5-0/getting_in_log_data/gelf.html
         [Fact]
         public async Task WhenSendingASmallPayload_GetTheCorrectEncoding()
         {
