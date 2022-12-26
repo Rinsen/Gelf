@@ -23,6 +23,7 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddTransient<GelfPayloadSerializer>();
             services.AddTransient<IGelfTransport, UdpGelfTransport>();
             services.AddTransient<IGelfTransport, TcpGelfTransport>();
+            services.AddTransient<IUdpClient, UdpClientWrapper>();
         }
 
         /// <summary>

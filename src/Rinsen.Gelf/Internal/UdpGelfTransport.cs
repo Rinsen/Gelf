@@ -1,32 +1,24 @@
-﻿using System;
-using System.Net;
-using System.Net.Sockets;
+﻿using Rinsen.Gelf.Internal;
+using System;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Rinsen.Gelf
 {
-    internal class UdpGelfTransport : IGelfTransport, IDisposable
+    internal class UdpGelfTransport : IGelfTransport
     {
-        private readonly GelfOptions _gelfOptions;
-        private readonly UdpClient _udpClient;
-        private bool _disposedValue;
-        private bool _initialized = false;
-        private readonly object _lock = new();
+        private readonly IUdpClient _udpClient;
 
         public GelfTransport TransportType => GelfTransport.Udp;
 
-        public UdpGelfTransport(GelfOptions gelfOptions)
+        public UdpGelfTransport(IUdpClient udpClient)
         {
-            _gelfOptions = gelfOptions;
-            _udpClient = new UdpClient(_gelfOptions.GelfServicePort);
+            _udpClient = udpClient;
         }
 
         public async Task Send(GelfPayload gelfPayload, CancellationToken stoppingToken)
         {
-            Init(_gelfOptions);
-
             var serializedPayload = GelfPayloadSerializer.Serialize(gelfPayload);
             
             byte[] sendbuf = Encoding.UTF8.GetBytes(serializedPayload);
@@ -43,34 +35,6 @@ namespace Rinsen.Gelf
             else
             {
                 await _udpClient.SendAsync(sendbuf, sendbuf.Length);
-            }
-        }
-
-        private void Init(GelfOptions gelfOptions)
-        {
-            if (_initialized)
-            {
-                return;
-            }
-
-            lock (_lock)
-            {
-                if (_initialized)
-                {
-                    return;
-                }
-
-                if (IPAddress.TryParse(gelfOptions.GelfServiceHostNameOrAddress, out var address))
-                {
-                    var ipEndpoint = new IPEndPoint(address, _gelfOptions.GelfServicePort);
-
-                    _udpClient.Connect(ipEndpoint);
-                }
-                else
-                {
-                    _udpClient.Connect(gelfOptions.GelfServiceHostNameOrAddress, _gelfOptions.GelfServicePort);
-                }
-                _initialized = true;
             }
         }
 
@@ -134,25 +98,6 @@ namespace Rinsen.Gelf
             var messageId = Environment.MachineName[machineNameLength..] + unixTime[unixTimeLength..];
 
             return Encoding.UTF8.GetBytes(messageId);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposedValue)
-            {
-                if (disposing)
-                {
-                    _udpClient.Dispose();
-                }
-                _disposedValue = true;
-            }
-        }
-
-        void IDisposable.Dispose()
-        {
-            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
         }
 
         static class GelfChunkHeader
