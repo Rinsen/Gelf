@@ -13,7 +13,7 @@ namespace Rinsen.Gelf.Tests.Internal
 
         // Standard description https://go2docs.graylog.org/5-0/getting_in_log_data/gelf.html
         [Fact]
-        public async Task WhenSendingASmallPayload_GetTheCorrectEncoding()
+        public async Task WhenSendingASmallPayload_WhitOnlyOneChunk_GetTheCorrectPayload()
         {
             // Arrange
             var udpTestClient = new UdpTestClient();
@@ -31,7 +31,7 @@ namespace Rinsen.Gelf.Tests.Internal
             await udpGelfTransport.Send(gelfPayload, cancellationTokenSource.Token);
 
             // Asser
-            var data = udpTestClient.GetData();
+            var data = udpTestClient.GetPayload();
             
             AssertProperties(data, new Dictionary<string, ExpectedProperty> {
                 { "version", new ExpectedProperty("1.1", JsonValueKind.String) },

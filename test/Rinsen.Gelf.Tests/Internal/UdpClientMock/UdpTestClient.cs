@@ -23,7 +23,7 @@ namespace Rinsen.Gelf.Tests.Internal.UdpClientMock
             return Task.FromResult(0);
         }
 
-        public JsonDocument GetData()
+        public JsonDocument GetPayload()
         {
             var data = Encoding.UTF8.GetString(_udpDatagrams.First().Datagram);
 
