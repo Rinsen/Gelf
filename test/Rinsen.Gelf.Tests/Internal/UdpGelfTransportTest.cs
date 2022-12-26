@@ -42,6 +42,39 @@ namespace Rinsen.Gelf.Tests.Internal
             });
         }
 
+        // Standard description https://go2docs.graylog.org/5-0/getting_in_log_data/gelf.html
+        [Fact]
+        public async Task WhenSendingASmallPayload_WithFullMessageIncluded_GetTheCorrectPayload()
+        {
+            // Arrange
+            var udpTestClient = new UdpTestClient();
+            var udpGelfTransport = new UdpGelfTransport(udpTestClient);
+            using var cancellationTokenSource = new CancellationTokenSource();
+            var gelfPayload = new GelfPayload
+            {
+                Level = GelfLogLevel.Emergency,
+                Host = "FakeHost",
+                ShortMessage = "My short message",
+                Timestamp = 123,
+                FullMessage = "This is the complete message"
+            };
+
+            // Act
+            await udpGelfTransport.Send(gelfPayload, cancellationTokenSource.Token);
+
+            // Asser
+            var data = udpTestClient.GetPayload();
+
+            AssertProperties(data, new Dictionary<string, ExpectedProperty> {
+                { "version", new ExpectedProperty("1.1", JsonValueKind.String) },
+                { "level", new ExpectedProperty("0", JsonValueKind.Number) },
+                { "host", new ExpectedProperty("FakeHost", JsonValueKind.String) },
+                { "short_message", new ExpectedProperty("My short message", JsonValueKind.String) },
+                { "full_message", new ExpectedProperty("This is the complete message", JsonValueKind.String) },
+                { "timestamp", new ExpectedProperty("123", JsonValueKind.Number) },
+            });
+        }
+
         private static void AssertProperties(JsonDocument data, Dictionary<string, ExpectedProperty> expectedProperties)
         {
             Assert.NotNull(data);
