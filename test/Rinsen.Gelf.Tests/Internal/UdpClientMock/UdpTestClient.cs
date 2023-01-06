@@ -25,8 +25,13 @@ namespace Rinsen.Gelf.Tests.Internal.UdpClientMock
             return Task.FromResult(0);
         }
 
-        public JsonDocument GetPayload()
+        public JsonDocument? GetPayload()
         {
+            if (!_udpDatagrams.Any())
+            {
+                return null;
+            }
+
             if (_udpDatagrams.Count == 1)
             {
                 var data = Encoding.UTF8.GetString(_udpDatagrams.First().Datagram);
@@ -75,7 +80,7 @@ namespace Rinsen.Gelf.Tests.Internal.UdpClientMock
                     throw new Exception("Message chunk length is not correct");
                 }
 
-                messageLength += udpDatagram.ByteSize;
+                messageLength += udpDatagram.ByteSize - 12;
             }
 
             var buffer = new byte[messageLength];
@@ -85,7 +90,8 @@ namespace Rinsen.Gelf.Tests.Internal.UdpClientMock
             {
                 var length = udpDatagram.Datagram.Length - 12;
 
-                Array.Copy(udpDatagram.Datagram, 12, buffer, 8192 * count, length);
+                Array.Copy(udpDatagram.Datagram, 12, buffer, 8180 * count, length);
+                count++;
             }
 
             var chunkedData = Encoding.UTF8.GetString(buffer);
