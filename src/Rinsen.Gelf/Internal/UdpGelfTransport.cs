@@ -100,7 +100,7 @@ namespace Rinsen.Gelf
             return Encoding.UTF8.GetBytes(messageId);
         }
 
-        static class GelfChunkHeader
+        internal static class GelfChunkHeader
         {
             public const int MagicByte1 = 0;
             public const byte MagicByte1Value = 0x1e;
@@ -117,7 +117,7 @@ namespace Rinsen.Gelf
             public const byte SequenseStart = 0x01;
         }
 
-        static class GelfChunk
+        internal static class GelfChunk
         {
             public const int Size = 8192;
             public const int MaxCount = 128;
