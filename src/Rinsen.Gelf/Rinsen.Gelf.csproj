@@ -3,7 +3,7 @@
   <PropertyGroup>
 	<TargetFramework>net7.0</TargetFramework>
 	<Nullable>enable</Nullable>
-	<Version>0.0.7</Version>
+	<Version>0.0.8</Version>
 	<Title>Rinsen Gelf Logger</Title>
 	<Authors>Fredrik Rinsén</Authors>
 	<Description>Gelf logger for Microsoft.Extensions.Logging</Description>

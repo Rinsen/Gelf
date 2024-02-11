@@ -28,7 +28,7 @@ namespace Rinsen.Gelf
 
             // UdpClient docs https://docs.microsoft.com/en-us/dotnet/api/system.net.sockets.udpclient?view=net-5.0
 
-            if (sendbuf.Length > GelfChunk.Size)
+            if (sendbuf.Length > GelfChunk.TotalSize)
             {
                 await SendChunkedMessages(sendbuf);
             }
@@ -48,7 +48,7 @@ namespace Rinsen.Gelf
                 return;
             }
 
-            var chunkedSendBuffer = new byte[GelfChunkHeader.HeaderLength + GelfChunk.Size];
+            var chunkedSendBuffer = new byte[GelfChunk.TotalSize];
             var messageId = GetMessageId();
 
             chunkedSendBuffer[GelfChunkHeader.MagicByte1] = GelfChunkHeader.MagicByte1Value;
@@ -60,18 +60,18 @@ namespace Rinsen.Gelf
             for (int i = 0; i < totalMessageChunksCount - 1; i++)
             {
                 chunkedSendBuffer[GelfChunkHeader.SequenseNumber] = Convert.ToByte(i);
-                var offsetInSourceArray = i * GelfChunk.Size;
-                Array.Copy(sendbuf, offsetInSourceArray, chunkedSendBuffer, GelfChunkHeader.MessageStart, GelfChunk.Size);
+                var offsetInSourceArray = i * GelfChunk.PayloadSize;
+                Array.Copy(sendbuf, offsetInSourceArray, chunkedSendBuffer, GelfChunkHeader.MessageStart, GelfChunk.PayloadSize);
                 
                 await _udpClient.SendAsync(chunkedSendBuffer, chunkedSendBuffer.Length);
             }
 
-            var remainingLength = sendbuf.Length - (totalMessageChunksCount - 1) * GelfChunk.Size;
+            var remainingLength = sendbuf.Length - (totalMessageChunksCount - 1) * GelfChunk.PayloadSize;
             
             var lastChunkSendBuffer = new byte[GelfChunkHeader.HeaderLength + remainingLength];
             Array.Copy(chunkedSendBuffer, lastChunkSendBuffer, GelfChunkHeader.HeaderLength);
 
-            var lastOffsetInSourceArray = (totalMessageChunksCount - 1) * GelfChunk.Size;
+            var lastOffsetInSourceArray = (totalMessageChunksCount - 1) * GelfChunk.PayloadSize;
             lastChunkSendBuffer[GelfChunkHeader.SequenseNumber] = Convert.ToByte(totalMessageChunksCount - 1);
             Array.Copy(sendbuf, lastOffsetInSourceArray, lastChunkSendBuffer, GelfChunkHeader.MessageStart, remainingLength);
 
@@ -80,7 +80,7 @@ namespace Rinsen.Gelf
 
         private static int GetMessageChunkCount(byte[] sendbuf)
         {
-            var chunkCount = Math.DivRem(sendbuf.Length, GelfChunk.Size, out var reminder);
+            var chunkCount = Math.DivRem(sendbuf.Length, GelfChunk.PayloadSize, out var reminder);
 
             if (reminder > 0)
             {
@@ -119,7 +119,8 @@ namespace Rinsen.Gelf
 
         internal static class GelfChunk
         {
-            public const int Size = 8192;
+            public const int PayloadSize = 8180;
+            public const int TotalSize = 8192;
             public const int MaxCount = 128;
         }
     }
