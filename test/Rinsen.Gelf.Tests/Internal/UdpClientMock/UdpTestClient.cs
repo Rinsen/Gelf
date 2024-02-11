@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using Rinsen.Gelf.Internal;
 using static Rinsen.Gelf.UdpGelfTransport;
 
